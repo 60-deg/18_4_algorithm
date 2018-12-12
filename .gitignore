@@ -1,3 +1,4 @@
 docs
 *.pdf
-*.out
+*.out*
+in.txt

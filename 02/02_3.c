@@ -1,4 +1,4 @@
-#include "Item4.h"
+#include "Item3.h"
 #include "STACK.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,8 +36,7 @@ int STACKempty() {
 }
 
 void STACKpush(Item item) {
-	// スタックトップの上 (s[N]) に新しいitemをプッシュする
-	if (s[N] != NULL && eq(s[N], LIMIT)) {
+	if (eq(s[N], LIMIT)) {
 		STACKerror();
 	}
 	copy(s[N], item);
@@ -46,13 +45,13 @@ void STACKpush(Item item) {
 }
 
 Item STACKpop() {
-	// スタックトップ (s[N-1]) にあるitemをポップして返す
 	Item ret;
 	if (N == 0) {
 		STACKerror();
 	}
 	--N;
 	ret = s[N];
+	s[N] = 0;
 	return ret;
 }
 
@@ -86,53 +85,52 @@ int main() {
 	// 異なる数値はすべて空白区切で入力されるとする
 	// 括弧の有無はどちらでも良い
 
+	int num = 0, x, y, ci;
 	char c, str[500];
-	int ci;
 
-	STACKinit(500);
+	STACKinit(100);
 	scanf("%[^\n]s", str);
 
 	for (ci = 0; ci < strlen(str); ci++) {
 		c = str[ci];
+		num = 0;
 		if (c == '(' || c == ')' || c == ' ') {
 			// 括弧や空白は無視
 			continue;
 		}
 		if (isnum(c)) {
-			// 数字の場合、数値全体を見終わるまでciを進めてstackに文字列を積む
-			char num[500]; // 数値を文字列化してnumに格納していく
-			int i;
-			for (i = 0; isnum(c); i++) {
-				num[i] = c;
-				ci++;
-				if (ci >= strlen(str)) {
+			// 数字の場合、数値全体を見終わるまでciを進めてstackに数値を積む
+			while (isnum(c)) {
+				num *= 10;
+				num += c - '0';
+				if (scanf("%c", &c) == EOF) {
 					break;
 				}
-				c = str[ci];
 			}
-			num[i] = '\0';
-			ci--;
 			STACKpush(num);
 		}
 		if (isop(c)) {
 			// 演算記号の場合、stackから直前の2つの数値を取り出して演算結果をstackに積む
-			char *x, *y;
 			y = STACKpop();
 			x = STACKpop();
-			char sub[4] = {' ', c, ' ', '\0'};
-			char xcy[500] = "("; // 新しく追加したい文字列
-			strcat(xcy, x);
-			strcat(xcy, sub);
-			strcat(xcy, y);
-			strcat(xcy, ")");
-			free(x);
-			free(y);
-
-			STACKpush(xcy);
+			switch (c) {
+			case '+':
+				STACKpush(x + y);
+				break;
+			case '-':
+				STACKpush(x - y);
+				break;
+			case '*':
+				STACKpush(x * y);
+				break;
+			case '/':
+				STACKpush(x / y);
+				break;
+			}
 		}
 	}
 
-	printf("%s\n", STACKpop());
+	printf("%d\n", STACKpop());
 
 	STACKfree();
 	return 0;
