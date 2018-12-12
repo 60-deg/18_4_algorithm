@@ -1,67 +1,5 @@
 #include "Item4.h"
 #include "STACK.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// interface
-static Item *s;
-static int N;
-
-void STACKerror();
-void STACKinit(int maxN);
-int STACKempty();
-void STACKpush(Item item);
-Item STACKpop();
-
-void STACKerror() {
-	printf("STACKerror\n");
-	free(s);
-	exit(1);
-}
-
-// implementation
-
-void STACKinit(int maxN) {
-	s = (Item *)malloc((maxN + 1) * sizeof(Item));
-	if (s == NULL) {
-		STACKerror();
-	}
-	N = 0;
-	s[maxN] = LIMIT;
-}
-
-int STACKempty() {
-	return N == 0;
-}
-
-void STACKpush(Item item) {
-	// スタックトップの上 (s[N]) に新しいitemをプッシュする
-	if (s[N] != NULL && eq(s[N], LIMIT)) {
-		STACKerror();
-	}
-	copy(s[N], item);
-	N++;
-	return;
-}
-
-Item STACKpop() {
-	// スタックトップ (s[N-1]) にあるitemをポップして返す
-	Item ret;
-	if (N == 0) {
-		STACKerror();
-	}
-	--N;
-	ret = s[N];
-	return ret;
-}
-
-void STACKfree() {
-	for (int i = 0; i < N; i++) {
-		itemfree(s[N]);
-	}
-	free(s);
-}
 
 // client
 
@@ -105,10 +43,10 @@ int main() {
 			for (i = 0; isnum(c); i++) {
 				num[i] = c;
 				ci++;
+				c = str[ci];
 				if (ci >= strlen(str)) {
 					break;
 				}
-				c = str[ci];
 			}
 			num[i] = '\0';
 			ci--;

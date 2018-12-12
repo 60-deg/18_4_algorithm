@@ -1,66 +1,5 @@
 #include "Item3.h"
 #include "STACK.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// interface
-static Item *s;
-static int N;
-
-void STACKerror();
-void STACKinit(int maxN);
-int STACKempty();
-void STACKpush(Item item);
-Item STACKpop();
-
-void STACKerror() {
-	printf("STACKerror\n");
-	free(s);
-	exit(1);
-}
-
-// implementation
-
-void STACKinit(int maxN) {
-	s = (Item *)malloc((maxN + 1) * sizeof(Item));
-	if (s == NULL) {
-		STACKerror();
-	}
-	N = 0;
-	s[maxN] = LIMIT;
-}
-
-int STACKempty() {
-	return N == 0;
-}
-
-void STACKpush(Item item) {
-	if (eq(s[N], LIMIT)) {
-		STACKerror();
-	}
-	copy(s[N], item);
-	N++;
-	return;
-}
-
-Item STACKpop() {
-	Item ret;
-	if (N == 0) {
-		STACKerror();
-	}
-	--N;
-	ret = s[N];
-	s[N] = 0;
-	return ret;
-}
-
-void STACKfree() {
-	for (int i = 0; i < N; i++) {
-		itemfree(s[N]);
-	}
-	free(s);
-}
 
 // client
 
@@ -100,10 +39,13 @@ int main() {
 		}
 		if (isnum(c)) {
 			// 数字の場合、数値全体を見終わるまでciを進めてstackに数値を積む
-			while (isnum(c)) {
+			int i;
+			for (i = 0; isnum(c); i++) {
 				num *= 10;
 				num += c - '0';
-				if (scanf("%c", &c) == EOF) {
+				ci++;
+				c = str[ci];
+				if (ci >= strlen(str)) {
 					break;
 				}
 			}

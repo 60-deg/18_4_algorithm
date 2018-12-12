@@ -1,8 +1,8 @@
-#include "Item.h"
+#include "Item2.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-// interface (資料から書き足した)
+// interface
 
 typedef struct QUEUEnode *link;
 
@@ -64,7 +64,6 @@ Item QUEUEdequeue() {
 void QUEUEfree() {
 	link tmp;
 	while (head != NULL) {
-		printf("free(%d)\n", head->item);
 		tmp = head;
 		head = head->next;
 		free(tmp);
@@ -76,18 +75,19 @@ void QUEUEfree() {
 
 int main() {
 	int n, i;
-	scanf("%d", &n);
 
+	printf("push N items to queue\nN: ");
+	scanf("%d", &n);
 	for (i = 0; i < n; i++) {
 		QUEUEenqueue(i);
 	}
 
+	printf("pop N items from queue\nN: ");
 	scanf("%d", &n);
 	for (i = 0; i < n; i++) {
 		printf("%d\n", QUEUEdequeue());
 	}
 
-	printf("\n");
 	QUEUEfree();
 
 	return 0;
