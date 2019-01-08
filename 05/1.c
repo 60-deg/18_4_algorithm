@@ -1,7 +1,7 @@
-#include "item.h"
-#include "key.h"
+#include "item1.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 typedef struct STnode *link;
@@ -20,9 +20,10 @@ static link NEW(Item item, link next) {
 }
 
 Item searchR(link l, Key v) {
-	printf("searchR v:%d\n", v);
-	if (eq(key(l->item), v)) {
-		// 見ているノードのitemについて，key(item) が v
+	if (l->next == NULL) {
+		return NULL;
+	} else if (strcmp((l->item)->keyVal, v) == 0) {
+		// 見ているノードのitemについて，item->key が v
 		// と一致するなら，itemを返す
 		return l->item;
 	} else {
@@ -31,17 +32,19 @@ Item searchR(link l, Key v) {
 	}
 }
 
-int has(Key v, int M) {
-	printf("has v:%d\n", v);
-	return hash(v) % M;
+int hashU(char *v, int M) {
+	int h, a = 31415, b = 27183;
+	for (h = 0; *v != '\0'; v++, a = a * b % (M - 1)) {
+		h = (a * h + *v) % M;
+	}
+	return h;
 }
 
 void STinit(int max) {
 	int i;
-
 	N = 0;
 	M = max / 5;
-	heads = malloc(M * sizeof(link));
+	heads = malloc(max * sizeof(link));
 	z = NEW(NULLitem, NULL);
 	for (i = 0; i < M; i++) {
 		heads[i] = z;
@@ -49,17 +52,16 @@ void STinit(int max) {
 }
 
 void STinsert(Item item) {
-	int i = hash(key(item));
+	int i = hashU(key(item), M);
 	heads[i] = NEW(item, heads[i]);
 	N++;
 }
 
 Item STsearch(Key v) {
-	printf("v: %d\n", v);
-	if (has(v, M) < 0) {
-		return NULLitem;
+	if (hashU(v, M) < 0 || hashU(v, M) >= M) {
+		return NULL;
 	}
-	return searchR(heads[has(v, M)], v);
+	return searchR(heads[hashU(v, M)], v);
 }
 
 int STcount() {
@@ -68,25 +70,34 @@ int STcount() {
 
 int main(void) {
 	Item item;
-	Key x;
+	int x;
+	Key y;
 	int max = 10;
 
 	STinit(max);
 
 	for (int i = 0; i < max; i++) {
+		Item newitem = (Item)malloc(sizeof(*newitem));
+		newitem->keyVal = (char *)malloc(max * (sizeof(char)));
+		Key y = (char *)malloc(max * (sizeof(char)));
 		printf("insert (item) : ");
 		scanf("%d", &x);
-		STinsert(x);
+		printf("insert (key) : ");
+		scanf("%s", y);
+		newitem->value = x;
+		strcpy(newitem->keyVal, y);
+		STinsert(newitem);
 	}
 
 	for (int i = 0; i < max / 2; i++) {
+		Key y = (char *)malloc(max * (sizeof(char)));
 		printf("search (key) : ");
-		scanf("%d", &x);
-		item = STsearch(x);
-		if (eq(item, NULLitem)) {
+		scanf("%s", y);
+		item = STsearch(y);
+		if (item == NULL) {
 			printf("item not found\n");
 		} else {
-			printf("found! item: %d\n", item);
+			printf("found! item: %d\n", item->value);
 		}
 	}
 
