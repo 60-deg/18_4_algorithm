@@ -1,16 +1,29 @@
 #include "header.h"
+// #include <stdio.h>
 
-Item aux[maxN];
+// void printList(Item lst[]) {
+// 	int n = 10;
+// 	for (int i = 0; i < n; i++) {
+// 		printf("%d ", lst[i]);
+// 	}
+// 	printf("\n");
+// 	return;
+// }
+
 void merge(Item a[], int l, int m, int r) {
-	int i, j, k;
-	for (i = m + 1; i > l; i--) {
-		aux[i - 1] = a[i - 1];
+	Item aux[maxN] = {};
+	// 配列aの左半分 [l, m] と右半分 [m+1, r] をマージする
+	for (int i = l; i <= m; i++) {
+		// 左半分をauxの左半分に昇順でコピー
+		aux[i] = a[i];
 	}
-	for (j = m; j < r; j++) {
-		aux[r + m - j] = a[j + 1];
+	for (int i = m; i < r; i++) {
+		// 右半分をauxの右半分に降順でコピー
+		aux[r + m - i] = a[i + 1];
 	}
 
-	for (k = 0; k <= r; k++) {
+	int i = l, j = r;
+	for (int k = l; k <= r; k++) {
 		if (less(aux[i], aux[j])) {
 			a[k] = aux[i++];
 		} else {
@@ -20,9 +33,9 @@ void merge(Item a[], int l, int m, int r) {
 }
 
 void sort(Item a[], int l, int r) {
-	int m = (r + 1) / 2;
-	if (r <= 1) return;
-	sort(a, l, m);
-	sort(a, m + 1, r);
-	merge(a, l, m, r);
+	int m = (r + l) / 2;
+	if (r <= l) return;
+	sort(a, l, m);	 // 左半分 [l, m] をソート
+	sort(a, m + 1, r); // 右半分 [m+1, r] をソート
+	merge(a, l, m, r); // マージ
 }

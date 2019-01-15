@@ -1,12 +1,12 @@
 #include "header.h"
-#include <stdio.h>
+// #include <stdio.h>
 
-void printA(Item a[]) {
-	for (int i = 0; i < 10; i++) {
-		printf("%d ", a[i]);
-	}
-	printf("\n");
-}
+// void printA(Item a[]) {
+// 	for (int i = 0; i < 10; i++) {
+// 		printf("%d ", a[i]);
+// 	}
+// 	printf("\n");
+// }
 
 int partition(Item a[], int l, int r) {
 	// 配列a を，pivotより小さいものが l〜i-1, pivotより大きいものが i+1〜r
