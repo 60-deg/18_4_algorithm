@@ -1,5 +1,3 @@
-#define RAND_MAX 10
-
 typedef struct {
 	int v;
 	int w;

@@ -10,15 +10,12 @@ struct graph {
 
 int **MATRIXint(int h, int w, int val) {
 	// 大きさh*wの行列を，値valで初期化して返す
-	printf("MATRIXint\n");
 	int **t = (int **)malloc(h * sizeof(int *));
 	if (t == NULL) {
 		printf("out of memory\n");
 		exit(1);
 	}
-	printf("po\n");
 	for (int i = 0; i < h; i++) {
-		printf("%d ", i);
 		t[i] = (int *)malloc(w * sizeof(int));
 		if (t[i] == NULL) {
 			printf("out of memory\n");
@@ -47,7 +44,7 @@ void GRAPHshow(Graph G) {
 }
 
 int randV(Graph G) {
-	return G->V * (rand() / RAND_MAX + 1.0);
+	return G->V * (rand() / (RAND_MAX + 1.0));
 }
 
 Graph GRAPHrand(int V, int E) {
@@ -60,7 +57,6 @@ Graph GRAPHrand(int V, int E) {
 
 Graph GRAPHinit(int V) {
 	// 頂点数Vのグラフを作成して返す
-	printf("GRAPHinit\n");
 	Graph G = (Graph)malloc(sizeof(Graph *));
 	G->V = V;
 	G->E = 0;
@@ -72,7 +68,7 @@ void GRAPHinsertE(Graph G, Edge e) {
 	// グラフGに辺eを追加する
 	int v = e.v, w = e.w;
 	if (!G->adj[v][w]) {
-		G->E++;
+		G->E += 1;
 	}
 	G->adj[v][w] = 1;
 	G->adj[w][v] = 1;
