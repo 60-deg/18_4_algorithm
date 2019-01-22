@@ -1,5 +1,4 @@
 #include "adjMatrix.h"
-#include <stdio.h>
 
 int main(int argc, char *argv[]) {
 	int V = atoi(argv[1]), E = atoi(argv[2]);

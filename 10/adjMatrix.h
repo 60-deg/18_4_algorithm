@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 struct graph {
@@ -9,21 +10,57 @@ struct graph {
 
 int **MATRIXint(int h, int w, int val) {
 	// 大きさh*wの行列を，値valで初期化して返す
-	int i, j;
+	printf("MATRIXint\n");
 	int **t = (int **)malloc(h * sizeof(int *));
-	for (i = 0; i < h; i++) {
-		t[i] = (int *)malloc(w * sizeof(int));
+	if (t == NULL) {
+		printf("out of memory\n");
+		exit(1);
 	}
-	for (i = 0; i < h; i++) {
-		for (j = 0; j < w; j++) {
+	printf("po\n");
+	for (int i = 0; i < h; i++) {
+		printf("%d ", i);
+		t[i] = (int *)malloc(w * sizeof(int));
+		if (t[i] == NULL) {
+			printf("out of memory\n");
+			exit(1);
+		}
+	}
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
 			t[i][j] = val;
 		}
 	}
 	return t;
 }
 
+void GRAPHshow(Graph G) {
+	printf("%d vertices, %d edges\n", G->V, G->E);
+	for (int j = 0; j < G->V; j++) {
+		printf("%2d:", j);
+		for (int k = 0; k < G->V; k++) {
+			if (G->adj[j][k]) {
+				printf(" %2d", k);
+			}
+		}
+		printf("\n");
+	}
+}
+
+int randV(Graph G) {
+	return G->V * (rand() / RAND_MAX + 1.0);
+}
+
+Graph GRAPHrand(int V, int E) {
+	Graph G = GRAPHinit(V);
+	while (G->E < E) {
+		GRAPHinsertE(G, EDGE(randV(G), randV(G)));
+	}
+	return G;
+}
+
 Graph GRAPHinit(int V) {
 	// 頂点数Vのグラフを作成して返す
+	printf("GRAPHinit\n");
 	Graph G = (Graph)malloc(sizeof(Graph *));
 	G->V = V;
 	G->E = 0;
