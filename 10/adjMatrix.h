@@ -1,6 +1,9 @@
 #include "graph.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+const char *graphType = "matrix";
 
 struct graph {
 	int V;
@@ -49,6 +52,9 @@ int randV(Graph G) {
 
 Graph GRAPHrand(int V, int E) {
 	Graph G = GRAPHinit(V);
+
+	srand((unsigned int)time(NULL));
+
 	while (G->E < E) {
 		GRAPHinsertE(G, EDGE(randV(G), randV(G)));
 	}
@@ -85,6 +91,7 @@ void GRAPHremoveE(Graph G, Edge e) {
 }
 
 int GRAPHedges(Edge a[], Graph G) {
+	// 配列aにグラフGの辺を格納していく、返り値は辺の総数
 	int v, w, E = 0;
 	for (v = 0; v < G->V; v++) {
 		for (w = 0; w < G->V; w++) {

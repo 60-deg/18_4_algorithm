@@ -4,6 +4,7 @@ typedef struct {
 } Edge;
 
 Edge EDGE(int v, int w) {
+	// 頂点 v, w を両端点として持つEdgeを返す
 	Edge e;
 	e.v = v;
 	e.w = w;
